@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/main.cpp
+iostream
+-
+vector
+-
+fstream
+-
+

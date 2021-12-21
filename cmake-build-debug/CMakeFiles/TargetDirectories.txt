@@ -1,0 +1,3 @@
+C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/cmake-build-debug/CMakeFiles/NAI_GRAPH_REPREZENTATION.dir
+C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/cmake-build-debug/CMakeFiles/rebuild_cache.dir
