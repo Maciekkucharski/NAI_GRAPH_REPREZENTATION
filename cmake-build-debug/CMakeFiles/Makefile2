@@ -70,12 +70,12 @@ clean: CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\clean
 CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\build.make /nologo -$(MAKEFLAGS) CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\Maciek\CLionProjects\NAI_GRAPH_REPREZENTATION\cmake-build-debug\CMakeFiles --progress-num=1,2 "Built target NAI_GRAPH_REPREZENTATION"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\Maciek\CLionProjects\NAI_GRAPH_REPREZENTATION\cmake-build-debug\CMakeFiles --progress-num=1,2,3 "Built target NAI_GRAPH_REPREZENTATION"
 .PHONY : CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\all
 
 # Build rule for subdir invocation for target.
 CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Maciek\CLionProjects\NAI_GRAPH_REPREZENTATION\cmake-build-debug\CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Maciek\CLionProjects\NAI_GRAPH_REPREZENTATION\cmake-build-debug\CMakeFiles 3
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 /nologo -$(MAKEFLAGS) CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\all
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Maciek\CLionProjects\NAI_GRAPH_REPREZENTATION\cmake-build-debug\CMakeFiles 0
 .PHONY : CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\rule

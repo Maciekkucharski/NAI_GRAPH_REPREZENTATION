@@ -9,6 +9,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/main.cpp" "C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/cmake-build-debug/CMakeFiles/NAI_GRAPH_REPREZENTATION.dir/main.cpp.obj"
+  "C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/test.cpp" "C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/cmake-build-debug/CMakeFiles/NAI_GRAPH_REPREZENTATION.dir/test.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "MSVC")
 
