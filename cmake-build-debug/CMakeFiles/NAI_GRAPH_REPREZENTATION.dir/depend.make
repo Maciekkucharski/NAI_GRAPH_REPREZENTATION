@@ -3,3 +3,5 @@
 
 CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\main.cpp.obj: ..\main.cpp
 
+CMakeFiles\NAI_GRAPH_REPREZENTATION.dir\test.cpp.obj: ..\test.cpp
+

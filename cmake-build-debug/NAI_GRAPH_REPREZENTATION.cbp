@@ -85,6 +85,9 @@
 		<Unit filename="C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/main.cpp">
 			<Option target="NAI_GRAPH_REPREZENTATION"/>
 		</Unit>
+		<Unit filename="C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/test.cpp">
+			<Option target="NAI_GRAPH_REPREZENTATION"/>
+		</Unit>
 		<Unit filename="C:/Users/Maciek/CLionProjects/NAI_GRAPH_REPREZENTATION/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
