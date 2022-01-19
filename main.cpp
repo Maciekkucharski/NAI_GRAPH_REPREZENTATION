@@ -6,9 +6,9 @@ using namespace std;
 
 const int inf = 999;
 
-vector <vector<int>> read(istream &input_file) {
+vector<vector<int>> read(istream &input_file) {
 
-    vector <vector<int>> out;
+    vector<vector<int>> out;
     while (!input_file.eof()) {
         int start;
         int finish;
@@ -23,22 +23,26 @@ vector <vector<int>> read(istream &input_file) {
     return out;
 }
 
-void generate_graph(vector <vector<int>> graph, ofstream &hook_out) {
+void generate_graph(vector<vector<int>> graph, ofstream &hook_out, vector<vector<int>> path) {
     hook_out << "graph {\n";
     for (auto e: graph) {
         hook_out << e[0] << " -- " << e[1] << "[label=" << e[2] << "];\n";
     }
+    for (auto e: path) {
+        hook_out << e[0] << " -- " << e[1] << "[label=" << e[2] <<", color=red];\n";
+    }
+
     hook_out << "}";
-    system("dot -Tpng g.dot -o g.png");
+//    system("dot -Tpng g.dot -o g.png");
 }
 
 
 void init_variables(int vertices_number, int start_vertex, vector<bool> &visited_vertices, vector<int> &target_weights,
-                    vector<int> &parent) {
+                    vector<int> &parent_matrix) {
     visited_vertices = vector<bool>(vertices_number, false);
     for (int i = 0; i < vertices_number; i++) {
         target_weights.push_back(inf);
-        parent.push_back(i);
+        parent_matrix.push_back(i);
     }
     target_weights[start_vertex] = 0;
 }
@@ -57,16 +61,16 @@ int get_nearest_unvisited_vertex(int vertices_number, vector<bool> visited_verti
 }
 
 
-void display(int vertices_number, int start_vertex, vector<int> target_weights, vector<int> parent) {
-    cout << "Vertex:\t\t\tWeight :\t\t\tPath\n";
+void display(int vertices_number, int start_vertex, vector<int> target_weights, vector<int> parent_matrix) {
+    cout << "Vertex:\t\tWeight :\t\tPath:\n";
     for (int i = 0; i < vertices_number; ++i) {
-        cout << i << "\t\t\t" << target_weights[i] << "\t\t\t" << " ";
-        cout << i << " ";
-        int parent_node = parent[i];
+        cout << i << "\t\t\t" << target_weights[i] << "\t\t" << " ";
+        cout << i;
+        int parent_node = parent_matrix[i];
 
         while (parent_node != start_vertex) {
             cout << " <- " << parent_node << " ";
-            parent_node = parent[parent_node];
+            parent_node = parent_matrix[parent_node];
         }
         cout << endl;
     }
@@ -74,25 +78,39 @@ void display(int vertices_number, int start_vertex, vector<int> target_weights, 
 
 
 void dijkstra(int vertices_number, int start_vertex, vector<bool> &visited_vertices, vector<int> &target_weights,
-              vector<int> &parent, vector <vector<int>> neighbour_weights) {
-    init_variables(vertices_number, start_vertex, visited_vertices, target_weights, parent);
+              vector<int> &parent_matrix, vector<vector<int>> neighbour_weights) {
+    init_variables(vertices_number, start_vertex, visited_vertices, target_weights, parent_matrix);
     for (int i = 0; i < vertices_number - 1; i++) {
-        int nearest_vertex = get_nearest_vertex(vertices_number, visited_vertices, target_weights);
+        int nearest_vertex = get_nearest_unvisited_vertex(vertices_number, visited_vertices, target_weights);
         visited_vertices[nearest_vertex] = true;
 
-        for (int neighbour_vertex = 0; neighbour_vertex < vertices_number; ++neighbour_vertex) {
-            if (neighbour_weights[nearest_vertex][neighbour_vertex] != inf && target_weights[neighbour_vertex] >
-                                                                              target_weights[nearest_vertex] +
-                                                                              neighbour_weights[nearest_vertex][neighbour_vertex]) {
-                target_weights[neighbour_vertex] =
-                        target_weights[nearest_vertex] + neighbour_weights[nearest_vertex][neighbour_vertex];
-                parent[neighbour_vertex] = nearest_vertex;
+        for (int potential_neighbour_vertex = 0;
+             potential_neighbour_vertex < vertices_number; ++potential_neighbour_vertex) {
+            if (neighbour_weights[nearest_vertex][potential_neighbour_vertex] != inf && target_weights[potential_neighbour_vertex] > target_weights[nearest_vertex] + neighbour_weights[nearest_vertex][potential_neighbour_vertex]) {
+                target_weights[potential_neighbour_vertex] = target_weights[nearest_vertex] + neighbour_weights[nearest_vertex][potential_neighbour_vertex];
+                parent_matrix[potential_neighbour_vertex] = nearest_vertex;
             }
         }
     }
-    display(vertices_number, start_vertex, target_weights, parent);
+//    display(vertices_number, start_vertex, target_weights, parent_matrix);
 }
 
+
+vector<vector<int>> convert(vector<vector<int>> neighbour_weights){
+    vector<vector<int>> graph;
+    for(int i=0; i< neighbour_weights.size(); i++){
+        for (int j = i+1; j < neighbour_weights.size(); ++j) {
+            if ((neighbour_weights[i][j]!= 999) && (neighbour_weights[i][j]!=0)){
+                vector<int> edge;
+                edge.push_back(i);
+                edge.push_back(j);
+                edge.push_back(neighbour_weights[i][j]);
+                graph.push_back(edge);
+            }
+        }
+    }
+    return graph;
+}
 
 int main(int argc, char **argv) {
 
@@ -106,8 +124,8 @@ int main(int argc, char **argv) {
 
     int vertices_number, start_vertex;
     vector<bool> visited_vertices;
-    vector<int> target_weights, parent;
-    vector <vector<int>> neighbour_weights;
+    vector<int> target_weights, parent_matrix;
+    vector<vector<int>> neighbour_weights;
 
     cout << "number of vertices:"
             " ";
@@ -125,7 +143,39 @@ int main(int argc, char **argv) {
 
     cout << "start vertex: ";
     cin >> start_vertex;
-    dijkstra(vertices_number, start_vertex, visited_vertices, target_weights, parent, neighbour_weights);
+    dijkstra(vertices_number, start_vertex, visited_vertices, target_weights, parent_matrix, neighbour_weights);
+    cout << "\n\n\n";
+    vector<vector<int>> graph = convert(neighbour_weights);
+
+    cout << "What vertex do you want to go to?: ";
+    int chosen_vertex;
+    cin >> chosen_vertex;
+    cout << endl;
+    int parent_node = parent_matrix[chosen_vertex];
+    vector<int> path;
+
+
+    while (parent_node != start_vertex) {
+        cout << " <- " << parent_node << " ";
+        path.push_back(parent_node);
+        parent_node = parent_matrix[parent_node];
+    }
+    path.push_back(start_vertex);
+    vector<vector<int>> converted_path;
+    cout << "rozmiar " << converted_path.size();
+    for (int i = 0; i < path.size()-1; ++i) {
+        vector<int> edge;
+        edge.push_back(path[i]);
+        edge.push_back(path[i+1]);
+        edge.push_back(0);
+        converted_path.push_back(edge);
+    }
+
+
+    string outfile = "new_graph.dot";
+    ofstream hook_out(outfile);
+    generate_graph(graph, hook_out, converted_path);
+
 
 }
 
