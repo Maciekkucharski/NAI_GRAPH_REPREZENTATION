@@ -36,6 +36,7 @@ void generate_graph(vector<vector<int>> graph, ofstream &hook_out){
 
 
 
+
 void init_variables(int vertices_number, int start_vertex, vector<bool>& visited_vertices, vector<int>& dist, vector<int>& parent) {
     visited_vertices = vector<bool>(vertices_number, false);
     for (int i = 0; i < vertices_number; i++) {
@@ -44,6 +45,7 @@ void init_variables(int vertices_number, int start_vertex, vector<bool>& visited
     }
     dist[start_vertex] = 0;
 }
+
 
 int get_nearest_vertex(int vertices_number, vector<bool> visited_vertices, vector<int> dist) {
     int min_val = inf;
@@ -56,6 +58,7 @@ int get_nearest_vertex(int vertices_number, vector<bool> visited_vertices, vecto
     }
     return min_node;
 }
+
 
 void display(int vertices_number, int start_vertex, vector<int> dist, vector<int> parent) {
     cout << "Node:\t\t\tWeight :\t\t\tPath\n";
@@ -71,6 +74,7 @@ void display(int vertices_number, int start_vertex, vector<int> dist, vector<int
         cout << endl;
     }
 }
+
 
 void dijkstra(int vertices_number, int  start_vertex, vector<bool>& visited_vertices, vector<int>& dist, vector<int>& parent, vector<vector<int>> weight) {
     init_variables(vertices_number, start_vertex, visited_vertices, dist, parent);
