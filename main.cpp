@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
 
     cout << "number of vertices: ";
     cin >> vertices_number;
-    cout << "\nPaste matrix: ";
+    cout << "\nPaste matrix: \n";
     for (int i = 0; i < vertices_number; i++){
         vector<int> row_weight_vector;
         for (int j = 0; j < vertices_number; j++){
