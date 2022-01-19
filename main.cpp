@@ -23,17 +23,21 @@ vector<vector<int>> read(istream &input_file) {
     return out;
 }
 
-void generate_graph(vector<vector<int>> graph, ofstream &hook_out, vector<vector<int>> path) {
+void generate_graph(const vector<vector<int>> graph, ofstream &hook_out, const vector<vector<int>> path) {
     hook_out << "graph {\n";
     for (auto e: graph) {
-        hook_out << e[0] << " -- " << e[1] << "[label=" << e[2] << "];\n";
+        bool used_path = false;
+        for (auto z: path) {
+            if ((e[0] == z[0] && e[1] == z[1]) ||(e[0] == z[1] && e[1] == z[0])){
+                hook_out << e[0] << " -- " << e[1] << "[label=" << e[2] << ", color=red];\n";
+                used_path = !used_path;
+            }
+        }
+        if (!used_path) {
+            hook_out << e[0] << " -- " << e[1] << "[label=" << e[2] << "];\n";
+        }
     }
-    for (auto e: path) {
-        hook_out << e[0] << " -- " << e[1] << "[label=" << e[2] <<", color=red];\n";
-    }
-
     hook_out << "}";
-//    system("dot -Tpng g.dot -o g.png");
 }
 
 
@@ -61,22 +65,6 @@ int get_nearest_unvisited_vertex(int vertices_number, vector<bool> visited_verti
 }
 
 
-void display(int vertices_number, int start_vertex, vector<int> target_weights, vector<int> parent_matrix) {
-    cout << "Vertex:\t\tWeight :\t\tPath:\n";
-    for (int i = 0; i < vertices_number; ++i) {
-        cout << i << "\t\t\t" << target_weights[i] << "\t\t" << " ";
-        cout << i;
-        int parent_node = parent_matrix[i];
-
-        while (parent_node != start_vertex) {
-            cout << " <- " << parent_node << " ";
-            parent_node = parent_matrix[parent_node];
-        }
-        cout << endl;
-    }
-}
-
-
 void dijkstra(int vertices_number, int start_vertex, vector<bool> &visited_vertices, vector<int> &target_weights,
               vector<int> &parent_matrix, vector<vector<int>> neighbour_weights) {
     init_variables(vertices_number, start_vertex, visited_vertices, target_weights, parent_matrix);
@@ -86,21 +74,23 @@ void dijkstra(int vertices_number, int start_vertex, vector<bool> &visited_verti
 
         for (int potential_neighbour_vertex = 0;
              potential_neighbour_vertex < vertices_number; ++potential_neighbour_vertex) {
-            if (neighbour_weights[nearest_vertex][potential_neighbour_vertex] != inf && target_weights[potential_neighbour_vertex] > target_weights[nearest_vertex] + neighbour_weights[nearest_vertex][potential_neighbour_vertex]) {
-                target_weights[potential_neighbour_vertex] = target_weights[nearest_vertex] + neighbour_weights[nearest_vertex][potential_neighbour_vertex];
+            if (neighbour_weights[nearest_vertex][potential_neighbour_vertex] != inf &&
+                target_weights[potential_neighbour_vertex] >
+                target_weights[nearest_vertex] + neighbour_weights[nearest_vertex][potential_neighbour_vertex]) {
+                target_weights[potential_neighbour_vertex] =
+                        target_weights[nearest_vertex] + neighbour_weights[nearest_vertex][potential_neighbour_vertex];
                 parent_matrix[potential_neighbour_vertex] = nearest_vertex;
             }
         }
     }
-//    display(vertices_number, start_vertex, target_weights, parent_matrix);
 }
 
 
-vector<vector<int>> convert(vector<vector<int>> neighbour_weights){
+vector<vector<int>> convert(vector<vector<int>> neighbour_weights) {
     vector<vector<int>> graph;
-    for(int i=0; i< neighbour_weights.size(); i++){
-        for (int j = i+1; j < neighbour_weights.size(); ++j) {
-            if ((neighbour_weights[i][j]!= 999) && (neighbour_weights[i][j]!=0)){
+    for (int i = 0; i < neighbour_weights.size(); i++) {
+        for (int j = i + 1; j < neighbour_weights.size(); ++j) {
+            if ((neighbour_weights[i][j] != 999) && (neighbour_weights[i][j] != 0)) {
                 vector<int> edge;
                 edge.push_back(i);
                 edge.push_back(j);
@@ -113,15 +103,6 @@ vector<vector<int>> convert(vector<vector<int>> neighbour_weights){
 }
 
 int main(int argc, char **argv) {
-
-//    cout << "Reading Graph from file!" << std::endl;
-//    string infile = argv[1];
-//    ifstream hook_in(infile);
-//    vector<vector<int>> graph = read(hook_in);
-//    string outfile = argv[2];
-//    ofstream hook_out(outfile);
-//    generate_graph(graph, hook_out);
-
     int vertices_number, start_vertex;
     vector<bool> visited_vertices;
     vector<int> target_weights, parent_matrix;
@@ -144,30 +125,28 @@ int main(int argc, char **argv) {
     cout << "start vertex: ";
     cin >> start_vertex;
     dijkstra(vertices_number, start_vertex, visited_vertices, target_weights, parent_matrix, neighbour_weights);
-    cout << "\n\n\n";
     vector<vector<int>> graph = convert(neighbour_weights);
 
     cout << "What vertex do you want to go to?: ";
     int chosen_vertex;
     cin >> chosen_vertex;
-    cout << endl;
     int parent_node = parent_matrix[chosen_vertex];
+
     vector<int> path;
-
-
+    path.push_back(chosen_vertex);
     while (parent_node != start_vertex) {
-        cout << " <- " << parent_node << " ";
         path.push_back(parent_node);
         parent_node = parent_matrix[parent_node];
     }
     path.push_back(start_vertex);
+
+
+
     vector<vector<int>> converted_path;
-    cout << "rozmiar " << converted_path.size();
-    for (int i = 0; i < path.size()-1; ++i) {
+    for (int i = 0; i < path.size() - 1; ++i) {
         vector<int> edge;
         edge.push_back(path[i]);
-        edge.push_back(path[i+1]);
-        edge.push_back(0);
+        edge.push_back(path[i + 1]);
         converted_path.push_back(edge);
     }
 
