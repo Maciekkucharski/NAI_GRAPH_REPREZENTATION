@@ -6,9 +6,9 @@ using namespace std;
 
 const int inf = 999;
 
-vector<vector<int>> read(istream &input_file) {
+vector <vector<int>> read(istream &input_file) {
 
-    vector<vector<int>> out;
+    vector <vector<int>> out;
     while (!input_file.eof()) {
         int start;
         int finish;
@@ -23,9 +23,9 @@ vector<vector<int>> read(istream &input_file) {
     return out;
 }
 
-void generate_graph(vector<vector<int>> graph, ofstream &hook_out){
+void generate_graph(vector <vector<int>> graph, ofstream &hook_out) {
     hook_out << "graph {\n";
-    for(auto e:graph){
+    for (auto e: graph) {
         hook_out << e[0] << " -- " << e[1] << "[label=" << e[2] << "];\n";
     }
     hook_out << "}";
@@ -33,37 +33,34 @@ void generate_graph(vector<vector<int>> graph, ofstream &hook_out){
 }
 
 
-
-
-
-
-void init_variables(int vertices_number, int start_vertex, vector<bool>& visited_vertices, vector<int>& dist, vector<int>& parent) {
+void init_variables(int vertices_number, int start_vertex, vector<bool> &visited_vertices, vector<int> &target_weights,
+                    vector<int> &parent) {
     visited_vertices = vector<bool>(vertices_number, false);
     for (int i = 0; i < vertices_number; i++) {
-        dist.push_back(inf);
+        target_weights.push_back(inf);
         parent.push_back(i);
     }
-    dist[start_vertex] = 0;
+    target_weights[start_vertex] = 0;
 }
 
 
-int get_nearest_vertex(int vertices_number, vector<bool> visited_vertices, vector<int> dist) {
-    int min_val = inf;
-    int min_node = 0;
+int get_nearest_unvisited_vertex(int vertices_number, vector<bool> visited_vertices, vector<int> target_weights) {
+    int min_weight = inf;
+    int closest_vertex = 0;
     for (int i = 0; i < vertices_number; ++i) {
-        if (!visited_vertices[i] && dist[i] < min_val) {
-            min_val = dist[i];
-            min_node = i;
+        if (!visited_vertices[i] && target_weights[i] < min_weight) {
+            min_weight = target_weights[i];
+            closest_vertex = i;
         }
     }
-    return min_node;
+    return closest_vertex;
 }
 
 
-void display(int vertices_number, int start_vertex, vector<int> dist, vector<int> parent) {
-    cout << "Node:\t\t\tWeight :\t\t\tPath\n";
+void display(int vertices_number, int start_vertex, vector<int> target_weights, vector<int> parent) {
+    cout << "Vertex:\t\t\tWeight :\t\t\tPath\n";
     for (int i = 0; i < vertices_number; ++i) {
-        cout << i << "\t\t\t" << dist[i] << "\t\t\t" << " ";
+        cout << i << "\t\t\t" << target_weights[i] << "\t\t\t" << " ";
         cout << i << " ";
         int parent_node = parent[i];
 
@@ -76,23 +73,25 @@ void display(int vertices_number, int start_vertex, vector<int> dist, vector<int
 }
 
 
-void dijkstra(int vertices_number, int  start_vertex, vector<bool>& visited_vertices, vector<int>& dist, vector<int>& parent, vector<vector<int>> weight) {
-    init_variables(vertices_number, start_vertex, visited_vertices, dist, parent);
+void dijkstra(int vertices_number, int start_vertex, vector<bool> &visited_vertices, vector<int> &target_weights,
+              vector<int> &parent, vector <vector<int>> neighbour_weights) {
+    init_variables(vertices_number, start_vertex, visited_vertices, target_weights, parent);
     for (int i = 0; i < vertices_number - 1; i++) {
-        int nearest_vertex = get_nearest_vertex(vertices_number, visited_vertices, dist);
+        int nearest_vertex = get_nearest_vertex(vertices_number, visited_vertices, target_weights);
         visited_vertices[nearest_vertex] = true;
 
-        for (int adj = 0; adj < vertices_number; ++adj) {
-            if (weight[nearest_vertex][adj] != inf && dist[adj] > dist[nearest_vertex] + weight[nearest_vertex][adj]) {
-                dist[adj] = dist[nearest_vertex] + weight[nearest_vertex][adj];
-                parent[adj] = nearest_vertex;
+        for (int neighbour_vertex = 0; neighbour_vertex < vertices_number; ++neighbour_vertex) {
+            if (neighbour_weights[nearest_vertex][neighbour_vertex] != inf && target_weights[neighbour_vertex] >
+                                                                              target_weights[nearest_vertex] +
+                                                                              neighbour_weights[nearest_vertex][neighbour_vertex]) {
+                target_weights[neighbour_vertex] =
+                        target_weights[nearest_vertex] + neighbour_weights[nearest_vertex][neighbour_vertex];
+                parent[neighbour_vertex] = nearest_vertex;
             }
         }
     }
-    display(vertices_number, start_vertex, dist, parent);
+    display(vertices_number, start_vertex, target_weights, parent);
 }
-
-
 
 
 int main(int argc, char **argv) {
@@ -107,25 +106,26 @@ int main(int argc, char **argv) {
 
     int vertices_number, start_vertex;
     vector<bool> visited_vertices;
-    vector<int> dist, parent;
-    vector<vector<int>> weight;
+    vector<int> target_weights, parent;
+    vector <vector<int>> neighbour_weights;
 
-    cout << "number of vertices: ";
+    cout << "number of vertices:"
+            " ";
     cin >> vertices_number;
     cout << "\nPaste matrix: \n";
-    for (int i = 0; i < vertices_number; i++){
+    for (int i = 0; i < vertices_number; i++) {
         vector<int> row_weight_vector;
-        for (int j = 0; j < vertices_number; j++){
+        for (int j = 0; j < vertices_number; j++) {
             int tmp_weight;
             cin >> tmp_weight;
             row_weight_vector.push_back(tmp_weight);
         }
-        weight.push_back(row_weight_vector);
+        neighbour_weights.push_back(row_weight_vector);
     }
 
     cout << "start vertex: ";
     cin >> start_vertex;
-    dijkstra(vertices_number, start_vertex, visited_vertices, dist, parent, weight);
+    dijkstra(vertices_number, start_vertex, visited_vertices, target_weights, parent, neighbour_weights);
 
 }
 
